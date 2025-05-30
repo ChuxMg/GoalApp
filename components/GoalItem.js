@@ -1,4 +1,3 @@
-// import { StyleSheet, View, Text, Pressable } from "react-native";
 import {
   StyleSheet,
   View,
@@ -23,16 +22,18 @@ function GoalItem(props) {
 
   return (
     <Swipeable renderRightActions={renderRightActions}>
-      <Pressable
-        android_ripple={{ color: "#210644" }}
-        // onPress={props.onDeleteItem.bind(this, props.id)}
-        // onPress={props.onDeleteItem.bind(this, props.id)} // Removed this line
-        style={({ pressed }) => pressed && styles.pressedItem}
-      >
-        <View style={styles.goalItem}>
-          <Text style={styles.goalText}>{props.text}</Text>
-        </View>
-      </Pressable>
+      <TouchableOpacity onLongPress={() => props.onLongPress(props.id)}>
+        <Pressable
+          android_ripple={{ color: "#210644" }}
+          // onPress={props.onDeleteItem.bind(this, props.id)}
+          // onPress={props.onDeleteItem.bind(this, props.id)} // Removed this line
+          style={({ pressed }) => pressed && styles.pressedItem}
+        >
+          <View style={styles.goalItem}>
+            <Text style={styles.goalText}>{props.text}</Text>
+          </View>
+        </Pressable>
+      </TouchableOpacity>
     </Swipeable>
   );
 }

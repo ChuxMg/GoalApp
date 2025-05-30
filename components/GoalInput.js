@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Button,
@@ -11,13 +11,20 @@ import {
 function GoalInput(props) {
   const [enteredGoalText, setEnteredGoalText] = useState("");
 
+  useEffect(() => {
+    if (props.editingGoal) {
+      setEnteredGoalText(props.editingGoal.text);
+    } else {
+      setEnteredGoalText(""); //Clear text if not editing
+    }
+  }, [props.editingGoal]);
+
   function goalInputHandler(enteredText) {
     setEnteredGoalText(enteredText);
   }
 
-  function addGoalHandler() {
+  function addOrUpdateGoalHandler() {
     props.onGoalHandler(enteredGoalText);
-    setEnteredGoalText("");
   }
 
   return (
@@ -38,7 +45,11 @@ function GoalInput(props) {
             <Button title="Cancel" onPress={props.onCancel} color="#EC3944" />
           </View>
           <View style={styles.button}>
-            <Button title="Add Goal" onPress={addGoalHandler} color="#141E46" />
+            <Button
+              title={props.editingGoal ? "Update Goal" : "Add Goal"}
+              onPress={addOrUpdateGoalHandler}
+              color="#141E46"
+            />
           </View>
         </View>
       </View>

@@ -9,6 +9,7 @@ import GoalInput from "./components/GoalInput";
 export default function App() {
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const [courseGoals, setCourseGoals] = useState([]);
+  const [editingGoalId, setEditingGoalId] = useState(null);
 
   function startAddGoalHandler() {
     setModalIsVisible(true);
@@ -16,14 +17,30 @@ export default function App() {
 
   function endAddGoalhandler() {
     setModalIsVisible(false);
+    setEditingGoalId(null); // Reset editing state if modal is cancelled
   }
 
   function addGoalHandler(enteredGoalText) {
-    setCourseGoals((currentCourseGoals) => [
-      ...currentCourseGoals,
-      { text: enteredGoalText, id: Math.random().toString() },
-    ]);
-    endAddGoalhandler();
+    if (editingGoalId) {
+      setCourseGoals((currentCourseGoals) =>
+        currentCourseGoals.map((goal) =>
+          goal.id === editingGoalId ? { ...goal, text: enteredGoalText } : goal
+        )
+      );
+      setEditingGoalId(null);
+    } else {
+      setCourseGoals((currentCourseGoals) => [
+        ...currentCourseGoals,
+        { text: enteredGoalText, id: Math.random().toString() },
+      ]);
+    }
+
+    setModalIsVisible(false); // Close modal after add/update
+  }
+
+  function startEditGoalHandler(id) {
+    setEditingGoalId(id);
+    setModalIsVisible(true); // Open modal for editing
   }
 
   function deleteGoalHandler(id) {
@@ -45,6 +62,11 @@ export default function App() {
           visible={modalIsVisible}
           onGoalHandler={addGoalHandler}
           onCancel={endAddGoalhandler}
+          editingGoal={
+            editingGoalId
+              ? courseGoals.find((goal) => goal.id === editingGoalId)
+              : null
+          }
         />
         <View style={styles.goalsContainer}>
           <FlatList
@@ -55,6 +77,7 @@ export default function App() {
                   text={itemData.item.text}
                   id={itemData.item.id}
                   onDeleteItem={deleteGoalHandler}
+                  onLongPress={startEditGoalHandler} // Pass the handler here
                 />
               );
             }}
