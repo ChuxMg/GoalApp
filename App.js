@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, View, FlatList, Button } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import GoalItem from "./components/GoalItem";
 import GoalInput from "./components/GoalInput";
@@ -32,7 +33,7 @@ export default function App() {
   }
 
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar style="auto" />
       <View style={styles.appContainer}>
         <Button
@@ -64,7 +65,7 @@ export default function App() {
           />
         </View>
       </View>
-    </>
+    </GestureHandlerRootView>
   );
 }
 
